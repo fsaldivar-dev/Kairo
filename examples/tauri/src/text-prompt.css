@@ -1,0 +1,10 @@
+.studio-dialog.text-prompt-dialog { width: min(740px, calc(100vw - 32px)); }
+.text-prompt-dialog .studio-dialog-heading { padding-bottom: 18px; }
+.text-prompt-body { padding: 20px 28px; display: flex; flex-direction: column; gap: 9px; }
+.text-prompt-body label { font-size: 11px; font-weight: 600; color: var(--secondary); }
+.text-prompt-body textarea { box-sizing: border-box; width: 100%; min-height: min(42vh, 360px); resize: vertical; border: 1px solid var(--border); border-radius: 8px; padding: 13px; background: var(--input); color: var(--text); font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.text-prompt-body textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.text-prompt-name .text-prompt-body textarea { min-height: 44px; height: 44px; resize: none; }
+.text-prompt-dialog .text-prompt-hint { margin: 0; color: var(--secondary); font-size: 10px; }
+.text-prompt-dialog .dialog-footer { justify-content: flex-end; }
+.text-prompt-dialog .dialog-footer button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

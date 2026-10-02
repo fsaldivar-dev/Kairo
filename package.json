@@ -1,0 +1,37 @@
+{
+  "name": "kairo-workspace",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @fsaldivar.dev/diagram-example",
+    "dev:tauri": "npm run tauri:dev -w @fsaldivar.dev/diagram-example",
+    "build": "npm run build:lib && npm run build -w @fsaldivar.dev/plugin && npm run build -w @fsaldivar.dev/diagram-example",
+    "build:lib": "npm run build -w @fsaldivar.dev/diagram",
+    "build:tauri": "npm run tauri:build -w @fsaldivar.dev/diagram-example",
+    "check": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:ui": "playwright test",
+    "test:rust": "cargo test -p tauri-plugin-kairo",
+    "size": "node scripts/size.mjs",
+    "bench": "npm run build:lib && node scripts/bench.mjs",
+    "convert": "node scripts/kairo-convert.mjs",
+    "lint:diagram": "node scripts/kairo-lint.mjs",
+    "build:standalone": "node scripts/build-standalone.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "8.3.1",
+    "vue": "^3.5.43"
+  }
+}

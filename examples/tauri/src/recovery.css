@@ -1,0 +1,16 @@
+.drafts-button { margin-left: auto; flex-shrink: 0; border: 1px solid var(--border); border-radius: 6px; color: var(--secondary); background: transparent; padding: 3px 8px; font: inherit; cursor: pointer; }
+.statusbar .drafts-button ~ #save-status { margin-left: 0; }
+.drafts-button[data-state="saved"] { color: var(--text); }
+.drafts-button[data-state="error"] { color: #cf795a; }
+.drafts-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.drafts-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.studio-dialog.recovery-dialog { width: min(800px, calc(100vw - 40px)); }
+.recovery-dialog .drafts-message { margin: 20px 28px; font-size: 12px; color: var(--secondary); }
+.drafts-list { padding: 0 28px 20px; display: grid; gap: 12px; }
+.draft-card { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px; background: var(--surface-alt, var(--surface)); border: 1px solid var(--border); border-radius: 12px; }
+.draft-card h3 { font-size: 14px; font-weight: 550; margin: 0 0 8px; overflow-wrap: anywhere; }
+.draft-card p { font-size: 11px; color: var(--secondary); margin: 0; line-height: 1.5; }
+.draft-card .draft-preview { margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.draft-actions { display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; max-width: 280px; }
+@media(max-width:1180px) { .statusbar .interaction-hint { display: none; } }
+@media(max-width:700px) { .draft-card { align-items: flex-start; flex-direction: column; } .draft-actions { max-width: none; } .recovery-dialog .dialog-footer { flex-wrap: wrap; } }

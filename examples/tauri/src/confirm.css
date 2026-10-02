@@ -1,0 +1,4 @@
+.studio-dialog.confirm-dialog { width: min(520px, calc(100vw - 40px)); }
+.confirm-dialog .dialog-footer { justify-content: flex-end; }
+.confirm-dialog .studio-dialog-heading h2 { font-size: 22px; }
+.confirm-dialog button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

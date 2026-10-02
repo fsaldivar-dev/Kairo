@@ -1,0 +1,16 @@
+{
+  "name": "@fsaldivar.dev/plugin",
+  "version": "0.1.0",
+  "description": "Optional Tauri 2 persistence bridge for Kairo diagrams.",
+  "license": "BSD-3-Clause",
+  "repository": { "type": "git", "url": "git+https://github.com/fsaldivar-dev/Kairo.git", "directory": "packages/plugin-diagram" },
+  "homepage": "https://github.com/fsaldivar-dev/Kairo#readme",
+  "bugs": "https://github.com/fsaldivar-dev/Kairo/issues",
+  "publishConfig": { "access": "public" },
+  "type": "module",
+  "files": ["dist"],
+  "exports": {".": {"types": "./dist/index.d.ts", "import": "./dist/index.js"}},
+  "scripts": {"build": "tsc -p tsconfig.build.json"},
+  "dependencies": {"@tauri-apps/api": "2.12.1"},
+  "peerDependencies": {"@fsaldivar.dev/diagram": "^0.1.0"}
+}

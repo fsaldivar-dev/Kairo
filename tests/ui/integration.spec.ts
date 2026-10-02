@@ -1,0 +1,31 @@
+import { test, expect } from '@playwright/test';
+
+test('Claude linear layout composes with the shape catalog, minimap, undo and draft recovery', async ({ page }) => {
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await page.locator('#explore-examples').click(); await page.locator('[data-example="shapes"]').click();
+  await page.locator('#save').click();
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('codaru-diagram-example')!));
+  const map = page.locator('.cd-minimap-toggle');
+  if (await map.getAttribute('aria-expanded') === 'true') await map.click();
+  await page.getByRole('button',{name:'Layout',exact:true}).click();
+  await page.getByRole('button',{name:'Layout en línea',exact:true}).click();
+  await expect(page.locator('#draft-status')).toContainText('lista');
+  const draft = await page.evaluate(() => JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k=>k.startsWith('kairo-draft-v1:'))!)!));
+  expect(draft.document.graph).toEqual(saved.graph);
+  expect(new Set(Object.values(draft.document.layout.nodes).map((n:any)=>n.y)).size).toBe(1);
+  for (const id of Object.keys(saved.layout.nodes)) expect(draft.document.layout.nodes[id].shape).toBe(saved.layout.nodes[id].shape);
+  await expect(page.locator('.cd-node')).toHaveCount(12);
+  await expect(map).toHaveAttribute('aria-expanded','false');
+  await page.locator('#undo').click();
+  await expect.poll(async () => page.evaluate(() => JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k=>k.startsWith('kairo-draft-v1:'))!)!).document.layout)).toEqual(saved.layout);
+  await page.locator('#redo').click(); await expect(page.locator('#draft-status')).toContainText('lista');
+  await page.reload(); await expect(page.locator('.cd-node')).toHaveCount(7);
+  await page.locator('#drafts-open').click(); await page.getByRole('button',{name:'Recuperar',exact:true}).click();
+  await expect(page.locator('.cd-node')).toHaveCount(12);
+  for (const [id,layout] of Object.entries(saved.layout.nodes)) await expect(page.locator(`.cd-node[data-node="${id}"]`)).toHaveAttribute('data-shape',(layout as {shape:string}).shape);
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('codaru-diagram-example')!))).toEqual(saved);
+  await page.locator('#readonly').click(); await page.getByRole('button',{name:'Layout',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Layout en línea',exact:true})).toBeDisabled();
+  expect(errors).toEqual([]);
+});

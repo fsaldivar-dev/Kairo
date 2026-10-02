@@ -1,0 +1,1 @@
+export { KairoDiagram } from './vue';

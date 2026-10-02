@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-diagrams",
+  "description": "The example window can persist diagram documents.",
+  "windows": ["main"],
+  "permissions": ["core:default", "kairo:default"]
+}

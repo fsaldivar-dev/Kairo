@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@fsaldivar.dev/diagram": ["packages/diagram/src/index.ts"],
+      "@fsaldivar.dev/diagram/io": ["packages/diagram/src/io.ts"],
+      "@fsaldivar.dev/diagram/analysis": ["packages/diagram/src/analysis.ts"],
+      "@fsaldivar.dev/diagram/layout": ["packages/diagram/src/layout-entry.ts"],
+      "@fsaldivar.dev/diagram/export": ["packages/diagram/src/export-entry.ts"],
+      "@fsaldivar.dev/diagram/themes": ["packages/diagram/src/themes-entry.ts"],
+      "@fsaldivar.dev/diagram/templates": ["packages/diagram/src/templates-entry.ts"],
+      "@fsaldivar.dev/diagram/labels": ["packages/diagram/src/labels.ts"],
+      "@fsaldivar.dev/diagram/recovery": ["packages/diagram/src/recovery.ts"],
+      "@fsaldivar.dev/diagram/player": ["packages/diagram/src/player-entry.ts"],
+      "@fsaldivar.dev/diagram/minimap": ["packages/diagram/src/minimap-entry.ts"],
+      "@fsaldivar.dev/diagram/react": ["packages/diagram/src/react-entry.ts"],
+      "@fsaldivar.dev/diagram/vue": ["packages/diagram/src/vue-entry.ts"],
+      "@fsaldivar.dev/diagram/svelte": ["packages/diagram/src/svelte-entry.ts"],
+      "@fsaldivar.dev/plugin": ["packages/plugin-diagram/src/index.ts"]
+    },
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "packages",
+    "examples/tauri/src",
+    "examples/tauri/vite.config.ts",
+    "tests",
+    "playwright.config.ts"
+  ]
+}

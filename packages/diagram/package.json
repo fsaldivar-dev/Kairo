@@ -1,0 +1,105 @@
+{
+  "name": "@fsaldivar.dev/diagram",
+  "version": "0.1.0",
+  "description": "A small, framework-independent diagram editor for Kairo and Tauri.",
+  "license": "BSD-3-Clause",
+  "repository": { "type": "git", "url": "git+https://github.com/fsaldivar-dev/Kairo.git", "directory": "packages/diagram" },
+  "homepage": "https://github.com/fsaldivar-dev/Kairo#readme",
+  "bugs": "https://github.com/fsaldivar-dev/Kairo/issues",
+  "publishConfig": { "access": "public" },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/diagram.js"
+    },
+    "./style.css": "./dist/style.css",
+    "./io": {
+      "types": "./dist/io.d.ts",
+      "import": "./dist/io.js"
+    },
+    "./analysis": {
+      "types": "./dist/analysis.d.ts",
+      "import": "./dist/analysis.js"
+    },
+    "./global": {
+      "import": "./dist/kairo.global.js"
+    },
+    "./global.css": "./dist/kairo.global.css",
+    "./element": {
+      "types": "./dist/element-entry.d.ts",
+      "import": "./dist/element.js"
+    },
+    "./player": {
+      "types": "./dist/player-entry.d.ts",
+      "import": "./dist/player.js"
+    },
+    "./minimap": {
+      "types": "./dist/minimap-entry.d.ts",
+      "import": "./dist/minimap.js"
+    },
+    "./react": {
+      "types": "./dist/react-entry.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./vue": {
+      "types": "./dist/vue-entry.d.ts",
+      "import": "./dist/vue.js"
+    },
+    "./svelte": {
+      "types": "./dist/svelte-entry.d.ts",
+      "import": "./dist/svelte.js"
+    },
+    "./themes": {
+      "types": "./dist/themes-entry.d.ts",
+      "import": "./dist/themes.js"
+    },
+    "./templates": {
+      "types": "./dist/templates-entry.d.ts",
+      "import": "./dist/templates.js"
+    },
+    "./layout": {
+      "types": "./dist/layout-entry.d.ts",
+      "import": "./dist/layout.js"
+    },
+    "./export": {
+      "types": "./dist/export-entry.d.ts",
+      "import": "./dist/export.js"
+    },
+    "./labels": {
+      "types": "./dist/labels.d.ts",
+      "import": "./dist/labels.js"
+    },
+    "./recovery": {
+      "types": "./dist/recovery.d.ts",
+      "import": "./dist/recovery.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build && vite build --config vite.io.config.ts && vite build --config vite.layout.config.ts && vite build --config vite.export.config.ts && vite build --config vite.analysis.config.ts && vite build --config vite.element.config.ts && vite build --config vite.player.config.ts && vite build --config vite.recovery.config.ts && vite build --config vite.labels.config.ts && vite build --config vite.minimap.config.ts && vite build --config vite.themes.config.ts && vite build --config vite.templates.config.ts && vite build --config vite.react.config.ts && vite build --config vite.vue.config.ts && vite build --config vite.svelte.config.ts && vite build --config vite.global.config.ts && tsc -p tsconfig.build.json"
+  },
+  "unpkg": "dist/kairo.global.js",
+  "jsdelivr": "dist/kairo.global.js",
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "vue": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  }
+}
