@@ -23,7 +23,8 @@ export function defineKairoElement(tag = 'kairo-diagram'): void {
     private clearedByHost = false;
     private everConnected = false;
     private srcPending = false;
-    static get observedAttributes(): string[] { return ['theme', 'readonly', 'src']; }
+    private fitObserver?: ResizeObserver;
+    static get observedAttributes(): string[] { return ['theme', 'readonly', 'src', 'auto-fit']; }
     /** The diagram document. Reading returns a live copy; writing replaces it. */
     get document(): DiagramDocument | undefined { return this.view ? this.view.getDocument() : this.current && parseDocument(this.current); }
     set document(value: DiagramDocument | undefined) {
@@ -32,7 +33,7 @@ export function defineKairoElement(tag = 'kairo-diagram'): void {
       this.srcPending = false;
       this.current = next;
       this.clearedByHost = !next;
-      if (!next) { this.view?.destroy(); this.view = undefined; }
+      if (!next) { this.fitObserver?.disconnect(); this.fitObserver = undefined; this.view?.destroy(); this.view = undefined; }
       else if (this.view) this.view.setDocument(next);
       else if (this.isConnected) this.mount();
     }
@@ -44,12 +45,20 @@ export function defineKairoElement(tag = 'kairo-diagram'): void {
     private isReadOnly(): boolean { return this.hasAttribute('readonly'); }
     attributeChangedCallback(name: string): void {
       if (name === 'readonly') this.view?.setReadOnly(this.isReadOnly());
+      else if (name === 'auto-fit') this.observeAutoFit();
       else if (name === 'src') {
         this.clearedByHost = false;
         if (this.isConnected || this.everConnected) this.srcPending = !!this.getAttribute('src');
         // During upgrade, connectedCallback will start the initial request once.
         if (this.isConnected && this.everConnected) void this.loadSrc();
       } else this.view?.setTheme(this.theme());
+    }
+    private observeAutoFit(): void {
+      this.fitObserver?.disconnect();
+      this.fitObserver = undefined;
+      if (!this.isConnected || !this.view || !this.hasAttribute('auto-fit')) return;
+      this.fitObserver = new ResizeObserver(() => { if (this.isConnected) this.view?.fit(); });
+      this.fitObserver.observe(this);
     }
     private cancelLoad(): void { this.loadVersion++; this.loadController?.abort(); this.loadController = undefined; }
     /** Fetches a v2 document from `src`; only the latest connected request may replace the current document. */
@@ -93,9 +102,10 @@ export function defineKairoElement(tag = 'kairo-diagram'): void {
       if (!this.view && this.current) this.mount();
       if (this.getAttribute('src') && (!this.current || this.srcPending)) void this.loadSrc();
     }
-    disconnectedCallback(): void { this.cancelLoad(); if (this.view) this.current = this.view.getDocument(); this.view?.destroy(); this.view = undefined; }
+    disconnectedCallback(): void { this.cancelLoad(); this.fitObserver?.disconnect(); this.fitObserver = undefined; if (this.view) this.current = this.view.getDocument(); this.view?.destroy(); this.view = undefined; }
     private mount(): void {
       if (!this.current) return;
+      this.fitObserver?.disconnect(); this.fitObserver = undefined;
       this.view?.destroy();
       if (!this.style.display) this.style.display = 'block';
       this.view = createDiagram(this, {
@@ -111,6 +121,7 @@ export function defineKairoElement(tag = 'kairo-diagram'): void {
       });
       if (this.isReadOnly()) this.view.setReadOnly(true);
       this.view.fit();
+      this.observeAutoFit();
     }
   }
   customElements.define(tag, KairoDiagramElement);

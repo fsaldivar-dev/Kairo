@@ -3,6 +3,7 @@
 ## Unreleased
 
 - The embedded Web Component now loads a `src` changed while detached and retries a request interrupted by disconnection. An explicit `document` assignment still takes precedence.
+- The optional `auto-fit` attribute re-fits an embedded diagram when its own container resizes. It can be toggled at runtime; multiple components keep independent views and teardown.
 
 ## 0.1.0 — 2026-10-02
 

@@ -1073,6 +1073,52 @@ test('<kairo-diagram> retries an interrupted src load on reconnect without accep
   expect(result).toEqual({ requests: 2, title: 'Nuevo', hostTitle: 'Asignado por host', hostRequests: 0 });
 });
 
+test('two auto-fit components resize and unmount independently', async ({ page }) => {
+  await page.setContent('<kairo-diagram id="a" auto-fit style="width:900px;height:460px"></kairo-diagram><kairo-diagram id="b" auto-fit style="width:900px;height:460px"></kairo-diagram>');
+  await page.addStyleTag({ path: 'packages/diagram/dist/kairo.global.css' });
+  await page.addScriptTag({ path: 'packages/diagram/dist/kairo.global.js' });
+  const initial = await page.evaluate(() => {
+    const K = (window as unknown as { Kairo: any }).Kairo;
+    K.defineKairoElement();
+    const a = document.getElementById('a') as any, b = document.getElementById('b') as any;
+    const doc = (prefix: string) => K.createDocument({ nodes: [
+      { id: 'one', type: 'start', title: `${prefix} uno` },
+      { id: 'two', type: 'process', title: `${prefix} dos` },
+      { id: 'three', type: 'end', title: `${prefix} tres` },
+    ], edges: [{ id: 'first', source: 'one', target: 'two' }, { id: 'second', source: 'two', target: 'three' }] });
+    a.document = doc('A'); b.document = doc('B');
+    return { a: a.editor.getViewport().zoom as number, b: b.editor.getViewport().zoom as number };
+  });
+  await page.evaluate(() => { document.getElementById('a')!.style.width = '320px'; });
+  const aZoom = () => page.evaluate(() => (document.getElementById('a') as any).editor.getViewport().zoom as number);
+  await expect.poll(aZoom).toBeLessThan(initial.a - 0.05);
+  const compactZoom = await aZoom();
+  await page.evaluate(() => { const a = document.getElementById('a')!; a.removeAttribute('auto-fit'); a.style.width = '900px'; });
+  await expect.poll(aZoom).toBeCloseTo(compactZoom, 4);
+  await page.evaluate(() => { document.getElementById('a')!.setAttribute('auto-fit', ''); });
+  await expect.poll(aZoom).toBeGreaterThan(compactZoom + 0.05);
+  const result = await page.evaluate(() => {
+    const a = document.getElementById('a') as any, b = document.getElementById('b') as any;
+    a.remove();
+    const destroyed = a.editor === undefined;
+    b.editor.updateNode('one', { title: 'B independiente' });
+    document.body.prepend(a);
+    return {
+      destroyed,
+      aTitle: a.document.graph.nodes[0].title,
+      bTitle: b.document.graph.nodes[0].title,
+      bZoom: b.editor.getViewport().zoom,
+      aMarkers: [...a.querySelectorAll('marker')].map((m: Element) => m.id),
+      bMarkers: [...b.querySelectorAll('marker')].map((m: Element) => m.id),
+    };
+  });
+  expect(result.destroyed).toBe(true);
+  expect(result.aTitle).toBe('A uno');
+  expect(result.bTitle).toBe('B independiente');
+  expect(result.bZoom).toBeCloseTo(initial.b, 4);
+  expect(result.aMarkers.some((id: string) => result.bMarkers.includes(id))).toBe(false);
+});
+
 test('importing DOT (Graphviz) text builds the diagram', async ({ page }) => {
   page.on('dialog', d => d.accept('digraph { a [label="Inicio" shape=box]; b [label="Fin" shape=ellipse]; a -> b [label="go"]; }'));
   await openFor(page, 'Importar DOT'); await page.getByRole('button', { name: 'Importar DOT' }).click();

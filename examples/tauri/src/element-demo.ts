@@ -19,6 +19,12 @@ diagram.addEventListener('documenterror', event => {
 
 document.querySelector('#load-a')!.addEventListener('click', () => diagram.setAttribute('src', '/embedded-a.json'));
 document.querySelector('#load-b')!.addEventListener('click', () => diagram.setAttribute('src', '/embedded-b.json'));
+document.querySelector('#compact')!.addEventListener('click', event => {
+  const button = event.currentTarget as HTMLButtonElement;
+  const compact = button.getAttribute('aria-pressed') !== 'true';
+  button.setAttribute('aria-pressed', String(compact));
+  diagram.classList.toggle('is-compact', compact);
+});
 document.querySelector('#remount-b')!.addEventListener('click', () => {
   const parent = diagram.parentNode!;
   const next = diagram.nextSibling;

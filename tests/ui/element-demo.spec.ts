@@ -43,3 +43,19 @@ test('embedded component loads a src changed while detached after remounting', a
   await expect(page.locator('kairo-diagram .cd-node')).toHaveCount(4);
   await expect.poll(() => bRequests).toBe(1);
 });
+
+test('embedded example can shrink and restore its auto-fit canvas', async ({ page }) => {
+  await page.goto('/element.html');
+  await expect(page.getByRole('status')).toContainText('Cargado /embedded-a.json');
+  const zoom = () => page.evaluate(() => (document.querySelector('kairo-diagram') as any).editor.getViewport().zoom as number);
+  const initial = await zoom();
+  const compact = page.getByRole('button', { name: 'Vista compacta' });
+  await compact.click();
+  await expect(compact).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(zoom).toBeLessThan(initial - 0.05);
+  const narrow = await zoom();
+  await compact.click();
+  await expect(compact).toHaveAttribute('aria-pressed', 'false');
+  await expect.poll(zoom).toBeGreaterThan(narrow + 0.05);
+  await expect(page.locator('kairo-diagram .cd-node')).toHaveCount(3);
+});
