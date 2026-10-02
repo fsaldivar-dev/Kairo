@@ -32,3 +32,14 @@ test('embedded component example loads, replaces, and reports errors without los
   await expect(page.locator('kairo-diagram .cd-node')).toHaveCount(2);
   await expect(page.locator('kairo-diagram .cd-node')).toContainText(['Tu sistema', 'Kairo embebido']);
 });
+
+test('embedded component loads a src changed while detached after remounting', async ({ page }) => {
+  await page.goto('/element.html');
+  await expect(page.getByRole('status')).toContainText('Cargado /embedded-a.json: 3 nodos');
+  let bRequests = 0;
+  await page.route('**/embedded-b.json', route => { bRequests++; return route.continue(); });
+  await page.getByRole('button', { name: 'Cambiar URL desmontado' }).click();
+  await expect(page.getByRole('status')).toContainText('Cargado /embedded-b.json: 4 nodos');
+  await expect(page.locator('kairo-diagram .cd-node')).toHaveCount(4);
+  await expect.poll(() => bRequests).toBe(1);
+});

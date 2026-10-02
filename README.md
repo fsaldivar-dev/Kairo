@@ -290,7 +290,7 @@ npm run build:tauri
 
 Las pruebas UI ejecutan el frontend **compilado**, no el servidor de desarrollo. Cubren mover/deshacer/rehacer, conectar sin precisión de píxel, cancelar un gesto, borrar con aristas incidentes, guardar/reabrir, texto escapado, temas y niveles de detalle. Las capturas están en `artifacts/`.
 
-Verificación del 2 de octubre de 2026: `check`, 856 pruebas unitarias, 7 Rust, 562 pruebas UI en Chromium/WebKit, build macOS aislado y límite de **19,99 KiB gzip** para núcleo + CSS. Los paquetes `@fsaldivar.dev/diagram` y `@fsaldivar.dev/plugin` se instalaron desde tarballs en un proyecto externo: su build Vite y el render de dos nodos en navegador funcionaron. [Las notas de la versión](docs/RELEASE_NOTES_0.1.0.md) detallan el alcance y los pendientes de integración nativa.
+Verificación del 2 de octubre de 2026: `check`, 856 pruebas unitarias, 7 Rust, 562 pruebas UI en Chromium/WebKit, build macOS aislado y límite de **19,99 KiB gzip** para núcleo + CSS. Los paquetes `@fsaldivar.dev/diagram` y `@fsaldivar.dev/plugin` se instalaron desde npm en un proyecto externo: pasaron TypeScript y Vite, y el editor mostró dos nodos conectados en navegador. [Las notas de la versión](docs/RELEASE_NOTES_0.1.0.md) detallan el alcance y los pendientes de integración nativa.
 
 El crate Rust se consume desde el repositorio etiquetado; su publicación en crates.io es independiente. No hay prueba en Windows/Linux ni firma de distribución. El core admite selección múltiple, resize y layout opcional; siguen fuera de alcance colaboración en tiempo real y routing automático alrededor de obstáculos.
 
@@ -388,7 +388,7 @@ Un único componente funciona en cualquier framework:
 </script>
 ```
 
-También disponible como módulo: `import { defineKairoElement, type KairoDiagramHost } from '@fsaldivar.dev/diagram/element'`. Propiedades `document`/`editor`, método `reload()` para recargar el mismo `src`; atributos `theme`, `readonly` y `src`; eventos `change`, `selectionchange`, `documentload` (`{src, document}`) y `documenterror` (`{src, error}`). Ambos eventos de carga burbujean. Si falla HTTP o JSON, el diagrama anterior permanece visible. Cambiar `src`, asignar `document`, editar o retirar el elemento cancela la carga pendiente. Asignar `document = undefined` vacía la vista, incluso después de desmontar y montar; un nuevo `src` o `reload()` la restaura. Puedes probarlo en el [ejemplo embebido](examples/tauri/element.html) con `npm run dev -w @fsaldivar.dev/diagram-example` y `/element.html`.
+También disponible como módulo: `import { defineKairoElement, type KairoDiagramHost } from '@fsaldivar.dev/diagram/element'`. Propiedades `document`/`editor`, método `reload()` para recargar el mismo `src`; atributos `theme`, `readonly` y `src`; eventos `change`, `selectionchange`, `documentload` (`{src, document}`) y `documenterror` (`{src, error}`). Ambos eventos de carga burbujean. Si falla HTTP o JSON, el diagrama anterior permanece visible. Cambiar `src`, asignar `document`, editar o retirar el elemento cancela la carga pendiente. `document = undefined` vacía la vista hasta que cambie `src` o se llame a `reload()`. En la rama principal, después de 0.1.0, al remontarlo conserva el documento actual y solicita la URL vigente si `src` cambió durante el desmontaje o la carga anterior quedó interrumpida; una asignación explícita a `document` tiene prioridad. Puedes probarlo en el [ejemplo embebido](examples/tauri/element.html) con `npm run dev -w @fsaldivar.dev/diagram-example` y `/element.html`.
 
 ## Uso sin bundler (standalone)
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The embedded Web Component now loads a `src` changed while detached and retries a request interrupted by disconnection. An explicit `document` assignment still takes precedence.
+
 ## 0.1.0 — 2026-10-02
 
 First public release of Kairo's TypeScript/SVG diagram editor and Tauri example.

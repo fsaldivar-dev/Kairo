@@ -19,6 +19,14 @@ diagram.addEventListener('documenterror', event => {
 
 document.querySelector('#load-a')!.addEventListener('click', () => diagram.setAttribute('src', '/embedded-a.json'));
 document.querySelector('#load-b')!.addEventListener('click', () => diagram.setAttribute('src', '/embedded-b.json'));
+document.querySelector('#remount-b')!.addEventListener('click', () => {
+  const parent = diagram.parentNode!;
+  const next = diagram.nextSibling;
+  diagram.remove();
+  diagram.setAttribute('src', '/embedded-b.json');
+  parent.insertBefore(diagram, next);
+  status.textContent = 'Componente remontado; cargando la URL nueva…';
+});
 document.querySelector('#reload')!.addEventListener('click', () => { status.textContent = 'Recargando URL actual…'; void diagram.reload(); });
 document.querySelector('#clear')!.addEventListener('click', () => { diagram.document = undefined; status.textContent = 'Vista vacía. Recarga la URL para restaurar el diagrama.'; });
 document.querySelector('#fail')!.addEventListener('click', () => diagram.setAttribute('src', '/embedded-invalid.json'));

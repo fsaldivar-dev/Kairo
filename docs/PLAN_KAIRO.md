@@ -48,7 +48,7 @@ El usuario pide una librería ligera y un plugin Tauri, con ejemplo funcional. K
 - Historial de 50 snapshots completos: medir memoria con metadatos y grupos antes de adoptar comandos/deltas.
 - Una condición guardada no es una condición ejecutable. Definir el contrato del evaluador con el host antes de simular decisiones.
 - El plugin Rust valida el sobre del documento y límites de tamaño; el parser TypeScript valida contenido. Si se expone la API Rust directamente a consumidores externos, decidir si compartir esquema o validar a ese nivel también.
-- No se ha publicado ningún paquete. Los nombres de scope son locales y no implican disponibilidad en npm.
-- El piloto embebido desde tarballs pasó en navegador; publicar 0.1.0 requiere decidir licencia, distribuir el crate Rust sin ruta local y validar el host Tauri de destino. Ver [las notas de 0.1.0](RELEASE_NOTES_0.1.0.md).
+- `@fsaldivar.dev/diagram@0.1.0` y `@fsaldivar.dev/plugin@0.1.0` ya son públicos en npm; el crate Rust se distribuye desde la etiqueta Git `v0.1.0`. La licencia BSD-3-Clause conserva el aviso de autor y repo. Ver [las notas de 0.1.0](RELEASE_NOTES_0.1.0.md).
+- El piloto embebido pasó desde tarballs y desde el registro npm en un proyecto externo; falta probarlo dentro del sistema de destino real. Las correcciones de la rama principal posteriores a `v0.1.0` requieren un futuro patch release para llegar a npm.
 - Los importadores de mapa mental (`mindmap`) y jerarquía (`hierarchy`: OPML, árbol JSON, lista de padres, esquema indentado) ya explicitan su perfil; el host solo aplica validación de decisiones a `flow`. La vista de ejemplo muestra el perfil y Deshacer restaura la presentación.
 - Probar Tauri nativo tras cambios de permisos y namespace. WebKit en Playwright no reemplaza una prueba real del IPC.

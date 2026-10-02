@@ -1032,6 +1032,47 @@ test('<kairo-diagram> clears an assigned document, stays empty after remount, an
   });
 });
 
+test('<kairo-diagram> retries an interrupted src load on reconnect without accepting the stale response', async ({ page }) => {
+  await page.setContent('<kairo-diagram id="d" style="width:800px;height:600px"></kairo-diagram>');
+  await page.addStyleTag({ path: 'packages/diagram/dist/kairo.global.css' });
+  await page.addScriptTag({ path: 'packages/diagram/dist/kairo.global.js' });
+  const result = await page.evaluate(async () => {
+    const K = (window as unknown as { Kairo: any }).Kairo;
+    K.defineKairoElement();
+    const el = document.getElementById('d') as any;
+    const doc = (title: string) => K.createDocument({ nodes: [{ id: 'a', type: 'process', title }], edges: [] });
+    el.document = doc('Anterior');
+    const originalFetch = window.fetch;
+    let requests = 0;
+    let hostRequests = 0;
+    let resolveFirst!: (value: Response) => void;
+    window.fetch = ((input: RequestInfo | URL) => {
+      if (String(input) === '/host') { hostRequests++; return Promise.resolve(new Response(JSON.stringify(doc('No debe cargarse')))); }
+      if (String(input) !== '/retry') return originalFetch(input);
+      requests++;
+      if (requests === 1) return new Promise<Response>(resolve => { resolveFirst = resolve; });
+      return Promise.resolve(new Response(JSON.stringify(doc('Nuevo'))));
+    }) as typeof fetch;
+    el.setAttribute('src', '/retry');
+    el.remove();
+    const loaded = new Promise<void>(resolve => el.addEventListener('documentload', () => resolve(), { once: true }));
+    document.body.append(el);
+    await loaded;
+    resolveFirst(new Response(JSON.stringify(doc('Obsoleto'))));
+    await Promise.resolve(); await Promise.resolve();
+    const title = el.document.graph.nodes[0].title;
+    el.remove();
+    el.setAttribute('src', '/host');
+    el.document = doc('Asignado por host');
+    document.body.append(el);
+    await Promise.resolve(); await Promise.resolve();
+    const hostTitle = el.document.graph.nodes[0].title;
+    window.fetch = originalFetch;
+    return { requests, title, hostTitle, hostRequests };
+  });
+  expect(result).toEqual({ requests: 2, title: 'Nuevo', hostTitle: 'Asignado por host', hostRequests: 0 });
+});
+
 test('importing DOT (Graphviz) text builds the diagram', async ({ page }) => {
   page.on('dialog', d => d.accept('digraph { a [label="Inicio" shape=box]; b [label="Fin" shape=ellipse]; a -> b [label="go"]; }'));
   await openFor(page, 'Importar DOT'); await page.getByRole('button', { name: 'Importar DOT' }).click();
