@@ -46,6 +46,8 @@ Import only what you use — each subpath is a separate bundle.
 | `@fsaldivar.dev/diagram` | Core editor: `createDiagram`, `createDocument`, selection, multi-select, clipboard (copy/cut/paste/duplicate), align/distribute, resize, groups, undo/redo, keyboard shortcuts. |
 | `@fsaldivar.dev/diagram/style.css` | The editor stylesheet (import once). |
 | `@fsaldivar.dev/diagram/io` | Import/export: Mermaid, DOT (Graphviz), PlantUML, D2, JSON Canvas, Cytoscape, GraphML, GEXF, draw.io, Excalidraw, CSV/TSV, Markdown, React Flow, adjacency matrix, share links, plus `convertText`/`detectFormat`/`importAny`. |
+| `@fsaldivar.dev/diagram/convert` | Format conversion surface on its own: `parseAny`, `importAny`, `convertText`, `detectFormat`, `serializeAs`, and the throw-safe `tryParse`. |
+| `@fsaldivar.dev/diagram/markdown` | Markdown import/export (`fromMarkdown`/`toMarkdown`/`toMarkdownTables`/`toReadme`) plus the synchronous `mermaidToSvg` one-call and `enhanceMarkdown` (replaces `<pre><code class="language-mermaid\|dot\|d2…">` blocks with inline SVG; `theme: 'currentColor'` to inherit light/dark). |
 | `@fsaldivar.dev/diagram/export` | `toSVG` (animated, build-reveal, wrapped labels, per-node colors, grid/dots background, pagination), `toPNG`, `toThumbnail`, `toHtml`, `toLegend`, `toTikz`, `toAscii`, `toSvgDataUri`, `toSvgPages`. |
 | `@fsaldivar.dev/diagram/layout` | `autoLayout` (layered, crossing-reduced), `organicLayout`, `radialLayout`, `treeLayout`, `circularLayout`, `gridLayout`, `fitNodeSizes`, `snapToGrid`, `subgraph`, `ego`, `collapseGroups`, `mergeDocuments`, `resolveOverlaps`. |
 | `@fsaldivar.dev/diagram/analysis` | `validateFlow`, `lintDocument`, `toReport`, and graph algorithms: shortest/longest/all paths, SCC, topological order & generations, degree hubs, articulation points & bridges (SPOF), betweenness brokers, communities (Louvain), PageRank, distance stats, graph coloring, cycle detection, transitive closure. |
@@ -67,6 +69,25 @@ import { convertText } from '@fsaldivar.dev/diagram/io';
 
 const svg = toSVG(parseMermaid(mermaidText));
 const dot = convertText(mermaidText, 'mermaid', 'dot');
+```
+
+## Markdown / rendered-HTML embedding
+
+Turn fenced diagram code into inline SVG, synchronously, with no Mermaid runtime and no network:
+
+```ts
+import { mermaidToSvg, enhanceMarkdown } from '@fsaldivar.dev/diagram/markdown';
+import { tryParse } from '@fsaldivar.dev/diagram/convert';
+
+// One call, throw-safe: valid code → SVG; bad syntax → a small error SVG (never throws).
+el.innerHTML = mermaidToSvg('graph TD;A-->B', { theme: 'currentColor' });
+
+// In-place: replace every <pre><code class="language-mermaid|dot|d2|plantuml…"> with inline SVG.
+// theme: 'currentColor' makes the SVG inherit the container's light/dark; CSS vars work too.
+enhanceMarkdown(document.querySelector('article')!, { theme: 'currentColor' });
+
+// Non-throwing parse for any format:
+const doc = tryParse(someMermaid, 'mermaid'); // DiagramDocument | null
 ```
 
 ## React

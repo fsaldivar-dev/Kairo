@@ -66,6 +66,12 @@ export function parseAny(text: string, from: InputFormat): DiagramDocument {
     case 'json': return parseDocument(text);
   }
 }
+/** Non-throwing {@link parseAny}: returns the parsed document, or `null` when the text can't be parsed as that
+ * format. Convenient for rendering untrusted/embedded code blocks without a try/catch at every call site. Pure. */
+export function tryParse(text: string, from: InputFormat): DiagramDocument | null {
+  try { return parseAny(text, from); } catch { return null; }
+}
+
 /** Serializes a document to any supported output format (string). */
 export function serializeAs(document: DiagramDocument, to: OutputFormat): string {
   switch (to) {

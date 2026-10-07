@@ -5,6 +5,8 @@ export default defineConfig({
   resolve: { dedupe: ['vue', 'react', 'react-dom'], alias: [
     { find: /^@fsaldivar\.dev\/diagram$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/index.ts', import.meta.url)) },
     { find: /^@fsaldivar\.dev\/diagram\/io$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/io.ts', import.meta.url)) },
+    { find: /^@fsaldivar\.dev\/diagram\/convert$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/convert.ts', import.meta.url)) },
+    { find: /^@fsaldivar\.dev\/diagram\/markdown$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/markdown-entry.ts', import.meta.url)) },
     { find: /^@fsaldivar\.dev\/diagram\/analysis$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/analysis.ts', import.meta.url)) },
     { find: /^@fsaldivar\.dev\/diagram\/labels$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/labels.ts', import.meta.url)) },
     { find: /^@fsaldivar\.dev\/diagram\/recovery$/, replacement: fileURLToPath(new URL('../../packages/diagram/src/recovery.ts', import.meta.url)) },
@@ -21,7 +23,7 @@ export default defineConfig({
     { find: '@fsaldivar.dev/diagram/style.css', replacement: fileURLToPath(new URL('../../packages/diagram/src/style.css', import.meta.url)) },
     { find: '@fsaldivar.dev/plugin', replacement: fileURLToPath(new URL('../../packages/plugin-diagram/src/index.ts', import.meta.url)) },
   ] },
-  build: { rollupOptions: { input: { main: fileURLToPath(new URL('./index.html', import.meta.url)), react: fileURLToPath(new URL('./react.html', import.meta.url)), vue: fileURLToPath(new URL('./vue.html', import.meta.url)), svelte: fileURLToPath(new URL('./svelte.html', import.meta.url)), element: fileURLToPath(new URL('./element.html', import.meta.url)) } } },
+  build: { rollupOptions: { input: { main: fileURLToPath(new URL('./index.html', import.meta.url)), react: fileURLToPath(new URL('./react.html', import.meta.url)), vue: fileURLToPath(new URL('./vue.html', import.meta.url)), svelte: fileURLToPath(new URL('./svelte.html', import.meta.url)), element: fileURLToPath(new URL('./element.html', import.meta.url)), markdown: fileURLToPath(new URL('./markdown.html', import.meta.url)) } } },
   server: { watch: { ignored: ['**/src-tauri/**', '**/target/**'] } },
   clearScreen: false,
 });

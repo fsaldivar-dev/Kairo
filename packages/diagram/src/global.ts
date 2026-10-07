@@ -3,6 +3,7 @@ import './style.css';
 // + themes + templates + the web component), so the offline artifact can import, lay out, analyse and export.
 export * from './index';
 export * from './io';
+export * from './mdembed';
 export * from './layout';
 export * from './export';
 export * from './analysis';
