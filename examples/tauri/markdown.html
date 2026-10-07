@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Kairo · Markdown embebido</title></head>
+  <body>
+    <main>
+      <header>
+        <div><small>KAIRO · MARKDOWN</small><h1>Diagramas inline en Markdown ya renderizado</h1><p>Esta página usa solo <code>@fsaldivar.dev/diagram/markdown</code>: <code>enhanceMarkdown</code> reemplaza los bloques de código por SVG, síncrono y sin runtime de Mermaid.</p></div>
+        <a href="/">Abrir editor completo</a>
+      </header>
+      <nav aria-label="Pruebas de Markdown">
+        <button id="enhance" type="button">Mejorar Markdown</button>
+        <button id="one-call" type="button">mermaidToSvg (una llamada)</button>
+      </nav>
+      <p id="status" role="status" aria-live="polite">Markdown sin procesar.</p>
+      <article id="doc" style="color: #1e293b;">
+        <h2>Flujo de autenticación</h2>
+        <pre><code class="language-mermaid">graph TD;A[Login]--&gt;B{¿Token?};B--&gt;|sí| C[Panel];B--&gt;|no| D[Salir]</code></pre>
+        <h2>Dependencias (DOT)</h2>
+        <pre><code class="language-dot">digraph { a -&gt; b; b -&gt; c }</code></pre>
+        <h2>Bloque no soportado</h2>
+        <pre><code class="language-js">const x = 1;</code></pre>
+        <h2>Mermaid inválido</h2>
+        <pre><code class="language-mermaid">%% vacío</code></pre>
+      </article>
+      <div id="one-call-out" aria-label="Salida de una llamada"></div>
+    </main>
+    <script type="module" src="/src/markdown-demo.ts"></script>
+  </body>
+</html>

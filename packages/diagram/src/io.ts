@@ -91,5 +91,5 @@ export type { MermaidInkOptions, MermaidInkMarkdownOptions, KrokiOptions, KrokiM
 export { toMarkdown, fromMarkdown, toMarkdownTables, toReadme } from './markdown';
 export type { MarkdownExportOptions, MarkdownTablesOptions, ReadmeOptions } from './markdown';
 export type { CsvImportOptions, CsvExportOptions, CsvNodesOptions } from './csv';
-export { convertText, parseAny, serializeAs, detectFormat, importAny } from './convert';
+export { convertText, parseAny, serializeAs, detectFormat, importAny, tryParse } from './convert';
 export type { InputFormat, OutputFormat } from './convert';

@@ -6,6 +6,10 @@ const core = measure('packages/diagram/dist/diagram.js') + measure('packages/dia
 console.log(`Core + CSS: ${(core / 1024).toFixed(2)} KiB gzip. Runtime dependencies: 0.`);
 const io = measure('packages/diagram/dist/io.js');
 console.log(`Opt-in IO (@fsaldivar.dev/diagram/io): ${(io / 1024).toFixed(2)} KiB gzip (not counted against the core budget).`);
+const convert = measure('packages/diagram/dist/convert.js');
+console.log(`Opt-in convert (@fsaldivar.dev/diagram/convert): ${(convert / 1024).toFixed(2)} KiB gzip (not counted; parseAny/convertText/detectFormat/tryParse).`);
+const markdown = measure('packages/diagram/dist/markdown.js');
+console.log(`Opt-in markdown (@fsaldivar.dev/diagram/markdown): ${(markdown / 1024).toFixed(2)} KiB gzip (not counted; mermaidToSvg/enhanceMarkdown).`);
 const layout = measure('packages/diagram/dist/layout.js');
 console.log(`Opt-in layout (@fsaldivar.dev/diagram/layout): ${(layout / 1024).toFixed(2)} KiB gzip (not counted; auto/organic/radial).`);
 const exportBundle = measure('packages/diagram/dist/export.js');

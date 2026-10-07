@@ -24,6 +24,14 @@
       "types": "./dist/io.d.ts",
       "import": "./dist/io.js"
     },
+    "./convert": {
+      "types": "./dist/convert.d.ts",
+      "import": "./dist/convert.js"
+    },
+    "./markdown": {
+      "types": "./dist/markdown-entry.d.ts",
+      "import": "./dist/markdown.js"
+    },
     "./analysis": {
       "types": "./dist/analysis.d.ts",
       "import": "./dist/analysis.js"
@@ -82,7 +90,7 @@
     }
   },
   "scripts": {
-    "build": "vite build && vite build --config vite.io.config.ts && vite build --config vite.layout.config.ts && vite build --config vite.export.config.ts && vite build --config vite.analysis.config.ts && vite build --config vite.element.config.ts && vite build --config vite.player.config.ts && vite build --config vite.recovery.config.ts && vite build --config vite.labels.config.ts && vite build --config vite.minimap.config.ts && vite build --config vite.themes.config.ts && vite build --config vite.templates.config.ts && vite build --config vite.react.config.ts && vite build --config vite.vue.config.ts && vite build --config vite.svelte.config.ts && vite build --config vite.global.config.ts && tsc -p tsconfig.build.json"
+    "build": "vite build && vite build --config vite.io.config.ts && vite build --config vite.convert.config.ts && vite build --config vite.markdown.config.ts && vite build --config vite.layout.config.ts && vite build --config vite.export.config.ts && vite build --config vite.analysis.config.ts && vite build --config vite.element.config.ts && vite build --config vite.player.config.ts && vite build --config vite.recovery.config.ts && vite build --config vite.labels.config.ts && vite build --config vite.minimap.config.ts && vite build --config vite.themes.config.ts && vite build --config vite.templates.config.ts && vite build --config vite.react.config.ts && vite build --config vite.vue.config.ts && vite build --config vite.svelte.config.ts && vite build --config vite.global.config.ts && tsc -p tsconfig.build.json"
   },
   "unpkg": "dist/kairo.global.js",
   "jsdelivr": "dist/kairo.global.js",

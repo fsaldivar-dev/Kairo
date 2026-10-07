@@ -60,9 +60,27 @@ function tokenizeChain(line: string): { segments: string[]; ops: string[] } | nu
   segments.push(cur);
   return ops.length ? { segments, ops } : null;
 }
+/** Splits Mermaid source into statements on newlines AND top-level `;` (Mermaid allows `;` as a statement
+ * separator, e.g. `graph TD;A-->B`). Semicolons inside `[] () {}` brackets or `"`/`'` quotes are preserved
+ * (arrows like `-->`/`<--` never contain `;`, so `<`/`>` are not treated as brackets). */
+function splitStatements(text: string): string[] {
+  const out: string[] = []; let buf = '', depth = 0, quote = '';
+  for (const c of text) {
+    if (quote) { buf += c; if (c === quote) quote = ''; continue; }
+    if (c === '"' || c === "'") { quote = c; buf += c; continue; }
+    if (c === '[' || c === '(' || c === '{') { depth++; buf += c; continue; }
+    if (c === ']' || c === ')' || c === '}') { depth = Math.max(0, depth - 1); buf += c; continue; }
+    if (c === '\r') continue;
+    if ((c === '\n' || c === ';') && depth === 0) { out.push(buf); buf = ''; continue; }
+    buf += c;
+  }
+  out.push(buf);
+  return out;
+}
+
 export function parseFlowText(text: string, options: TextImportOptions = {}): DiagramDocument {
   const width = options.nodeWidth ?? 200, height = options.nodeHeight ?? 92, gap = options.gap ?? 64;
-  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l && !l.startsWith('%%'));
+  const lines = splitStatements(text).map(l => l.trim()).filter(l => l && !l.startsWith('%%'));
   let horizontal = false, reverse = false;
   const nodes = new Map<string, ParsedNode>(), order: string[] = [];
   const edges: DiagramEdge[] = [], dashedEdges = new Set<string>(), plainEdges = new Set<string>();

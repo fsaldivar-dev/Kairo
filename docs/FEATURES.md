@@ -2483,3 +2483,21 @@ Coste núcleo sin cambios (**19.99 KiB**; vive en `/analysis`, tree-shakeable; s
 Ejemplo: botón *Layout en línea* en el menú Layout (icono `route`).
 
 Coste núcleo sin cambios (**19.99 KiB**; vive en `/layout`, tree-shakeable; subpath 13.21 KiB). `tests/arclayout.test.ts` cubre todos los nodos en una base en orden topológico (no de declaración) + grafo intacto, la variante vertical (una columna, a sobre b), y la recaída a orden de declaración en un ciclo + grafo vacío; prueba UI (*Layout en línea* → todos comparten la misma `y`, `x` distintas, semántica intacta) en Chromium/WebKit. `npm test` 850, `npm run check` OK.
+
+## Subpaths `./convert` y `./markdown` + render síncrono desde texto (`mermaidToSvg`, `enhanceMarkdown`, `tryParse`)
+
+Pensado para **entrar desde un bloque de texto/markdown de forma estable y síncrona** (sin runtime de Mermaid). Cuatro partes:
+
+1. **Nuevos subpaths en `package.exports`** que ya existían en el código pero no eran importables:
+   - `@fsaldivar.dev/diagram/convert` → `parseAny`, `importAny`, `convertText`, `detectFormat`, `serializeAs` y el nuevo `tryParse` (`InputFormat` incluye `mermaid`/`dot`/`d2`/`plantuml`/`drawio`/…). Entry `src/convert.ts`, bundle `dist/convert.js` (30 KiB gzip, no cuenta).
+   - `@fsaldivar.dev/diagram/markdown` → `fromMarkdown`/`toMarkdown`/`toMarkdownTables`/`toReadme` + lo nuevo de abajo. Entry `src/markdown-entry.ts`, bundle `dist/markdown.js` (33.6 KiB gzip, no cuenta).
+
+2. **Atajo de una llamada + enhancer síncrono** (`packages/diagram/src/mdembed.ts`, en `@fsaldivar.dev/diagram/markdown`):
+   - `mermaidToSvg(code, opts?): string` — throw-safe: `mermaidToSvg('graph TD;A-->B')` devuelve un SVG; con sintaxis mala devuelve un **SVG de error** (`errorSvg`), nunca lanza. `codeToSvg(code, from, opts?)` es la versión genérica para cualquier `InputFormat`.
+   - `enhanceMarkdown(root, { languages?, theme?, onError? })` — reemplaza `<pre><code class="language-mermaid|dot|graphviz|d2|plantuml">` por el SVG inline, **sin async ni runtime de mermaid**; solo lee/escribe el árbol recibido (vía su `ownerDocument`), deja intactos los lenguajes no soportados y reporta los bloques inválidos por `onError` sin tocarlos.
+
+3. **Parseo que no lanza**: `tryParse(text, from): DiagramDocument | null` (en `convert.ts`); `mermaidToSvg`/`enhanceMarkdown` lo usan internamente.
+
+4. **Tema por tokens**: `theme: 'currentColor'` (o el objeto exportado `currentColorTheme`) hace que el SVG herede el `color` del contenedor (claro/oscuro) sin mapear `DiagramTheme`; además cualquier valor de tema se emite verbatim, así que `{ edge: 'var(--line)' }` (variables CSS) también funciona.
+
+**Fix de parser necesario para el criterio de aceptación**: `parseFlowText` (Mermaid flowchart) ahora acepta `;` como separador de sentencias en una línea (`graph TD;A-->B`), respetando `;` dentro de `[] () {}` y comillas; las flechas `-->`/`<--` nunca se parten. Todo puro y síncrono (sin DOM salvo `enhanceMarkdown`); cero dependencias nuevas; núcleo intacto en **19.99 KiB**. Ejemplo: página `examples/tauri/markdown.html` + `src/markdown-demo.ts`. `tests/embed-markdown.test.ts` (semicolon parsing incl. `;` en label, mermaidToSvg válido/error sin throw, `currentColor`, codeToSvg DOT, `tryParse`) + prueba UI `tests/ui/markdown.spec.ts` (enhanceMarkdown: 2 SVG renderizados, 2 bloques intactos, 1 error; `currentColor` heredado; mermaidToSvg de una llamada) en Chromium/WebKit. `npm test` 861, `npm run check` OK.

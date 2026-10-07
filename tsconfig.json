@@ -18,6 +18,8 @@
     "paths": {
       "@fsaldivar.dev/diagram": ["packages/diagram/src/index.ts"],
       "@fsaldivar.dev/diagram/io": ["packages/diagram/src/io.ts"],
+      "@fsaldivar.dev/diagram/convert": ["packages/diagram/src/convert.ts"],
+      "@fsaldivar.dev/diagram/markdown": ["packages/diagram/src/markdown-entry.ts"],
       "@fsaldivar.dev/diagram/analysis": ["packages/diagram/src/analysis.ts"],
       "@fsaldivar.dev/diagram/layout": ["packages/diagram/src/layout-entry.ts"],
       "@fsaldivar.dev/diagram/export": ["packages/diagram/src/export-entry.ts"],
