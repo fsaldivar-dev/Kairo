@@ -1,12 +1,18 @@
 {
   "name": "@fsaldivar.dev/diagram",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A small, framework-independent diagram editor for Kairo and Tauri.",
   "license": "BSD-3-Clause",
-  "repository": { "type": "git", "url": "git+https://github.com/fsaldivar-dev/Kairo.git", "directory": "packages/diagram" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fsaldivar-dev/Kairo.git",
+    "directory": "packages/diagram"
+  },
   "homepage": "https://github.com/fsaldivar-dev/Kairo#readme",
   "bugs": "https://github.com/fsaldivar-dev/Kairo/issues",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "files": [
     "dist"
